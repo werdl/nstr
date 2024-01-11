@@ -5,23 +5,28 @@ use core::default::Default;
 pub const DEFAULT_BUFFER_SIZE: usize = 4096;
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Zstr<const N: usize> {
+pub struct String<const N: usize> {
     pub chars: [u8; N],
     pub len: usize,
 }
 
-pub fn new() -> Zstr<DEFAULT_BUFFER_SIZE> {
-    Zstr { chars: [0; DEFAULT_BUFFER_SIZE], len: 0 }
+pub fn new() -> String<DEFAULT_BUFFER_SIZE> {
+    String { chars: [0; DEFAULT_BUFFER_SIZE], len: 0 }
 }
 
-impl<const N: usize> Zstr<N> {
+impl<const N: usize> String<N> {
     pub fn new() -> Self {
-        Zstr { chars: [0; N], len: 0 }
+        String { chars: [0; N], len: 0 }
     }
 
     pub fn as_mut_str(&mut self) -> &mut str {
         // Convert the byte slice to a string slice
         core::str::from_utf8_mut(&mut self.chars[..self.len]).unwrap()
+    }
+
+    pub fn as_str(&self) -> &str {
+        // Convert the byte slice to a string slice
+        core::str::from_utf8(&self.chars[..self.len]).unwrap()
     }
 
     pub fn capacity(&self) -> usize {
@@ -30,6 +35,53 @@ impl<const N: usize> Zstr<N> {
 
     pub fn clear(&mut self) {
         self.len = 0;
+    }
+
+    pub fn ends_with(&self, s: &str) -> bool {
+        // iterate over the chars of s
+        // check if the last chars of self are equal to s
+        let mut i = 0;
+        let mut j = self.len - s.len();
+        while i < s.len() {
+            if self.chars[j] != s.as_bytes()[i] {
+                return false;
+            }
+            i+=1;
+            j+=1;
+        }
+        true
+    }
+
+    pub fn find(&self, s: &str) -> Option<usize> {
+        // iterate over the chars of self
+        // check if the chars of self are equal to s
+        let mut i = 0;
+        let mut j = 0;
+        while i < self.len {
+            if self.chars[i] == s.as_bytes()[j] {
+                j+=1;
+                if j == s.len() {
+                    return Some(i-j+1);
+                }
+            } else {
+                j = 0;
+            }
+            i+=1;
+        }
+        None
+    }
+    
+    pub fn from(s: &str) -> Self {
+        let mut str = String::<N>::new();
+        str.push_str(s);
+        str
+    }
+
+    pub fn get<I>(&self, index: I) -> Option<&str>
+    where
+        I: core::slice::SliceIndex<[u8], Output = [u8]>,
+    {
+        self.chars.get(index).map(|slice| core::str::from_utf8(slice)).transpose().unwrap()
     }
 
     /// insert c at index
@@ -56,6 +108,18 @@ impl<const N: usize> Zstr<N> {
             self.insert(i, c);
             i+=1;
         }        
+    }
+
+    pub fn lines(&self) -> core::str::Lines {
+        self.as_str().lines()
+    }
+
+    pub fn parse<T>(&self) -> T
+    where
+        T: core::str::FromStr + core::fmt::Debug,
+        <T as core::str::FromStr>::Err: core::fmt::Debug,
+    {
+        self.as_str().parse::<T>().unwrap()
     }
 
     pub fn remove(&mut self, index: usize) -> char {
@@ -92,10 +156,6 @@ impl<const N: usize> Zstr<N> {
         }
     }
 
-    pub fn as_str(&self) -> &str {
-        // Convert the byte slice to a string slice
-        core::str::from_utf8(&self.chars[..self.len]).unwrap()
-    }
 
     pub fn push(&mut self, c: char) {
         // Convert the char to a byte sequence
@@ -110,7 +170,7 @@ impl<const N: usize> Zstr<N> {
                 // Increment the length
                 self.len += 1;
             } else {
-                panic!("Zstr is full")
+                panic!("String is full")
             }
         }
     }
@@ -123,26 +183,39 @@ impl<const N: usize> Zstr<N> {
         }
     }
 
-    pub fn from(s: &str) -> Self {
-        let mut zstr = Zstr::<N>::new();
-        zstr.push_str(s);
-        zstr
+    pub fn rfind(&self, s: &str) -> Option<usize> {
+        // iterate over the chars of self
+        // check if the chars of self are equal to s
+        let mut i = self.len - 1;
+        let mut j = s.len() - 1;
+        while i > 0 {
+            if self.chars[i] == s.as_bytes()[j] {
+                j-=1;
+                if j == 0 {
+                    return Some(i-j+1);
+                }
+            } else {
+                j = s.len() - 1;
+            }
+            i-=1;
+        }
+        None
     }
 }
 
-impl<const N: usize> Default for Zstr<N> {
+impl<const N: usize> Default for String<N> {
     fn default() -> Self {
-        Zstr::<N>::from("")
+        String::<N>::from("")
     }
 }
 
-impl<const N: usize> core::fmt::Display for Zstr<N> {
+impl<const N: usize> core::fmt::Display for String<N> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{}", self.as_str())
     }
 }
 
-impl<const N: usize> core::fmt::Debug for Zstr<N> {
+impl<const N: usize> core::fmt::Debug for String<N> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{:#?}", self.as_str())
     }
@@ -156,7 +229,7 @@ mod tests {
 
     #[test]
     fn test_new() {
-        let mut s = Zstr::<64>::new();
+        let mut s = String::<64>::new();
         s.push('a');
         s.push('b');
         s.push('c');
@@ -166,6 +239,6 @@ mod tests {
         s.push_str("bc");
         // assert_eq!(s.as_str(), "abc");
 
-        std::println!("s: {}", s);
+        std::println!("s: {:?}", s.find("LOL"));
     }
 }
