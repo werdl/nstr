@@ -8,7 +8,7 @@ description = "A no_std, no_alloc, embedded-friendly string library"
 repository = "https://github.com/werdl/nstr"
 readme = "README.md"
 documentation = "https://docs.rs/nstr"
-keywords = ["string", "embedded", "no-std", "no-alloc", "memory-management", "data-structures"]
+keywords = ["string", "embedded", "no-std", "no-alloc","data-structures"]
 homepage = "https://github.com/werdl/nstr"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
