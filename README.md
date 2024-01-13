@@ -1,8 +1,10 @@
-/*!
+# nstr
+> no_std, no global allocator strings
+
 A string library for systems with no global allocator and no standard library. That is to say, everything is allocated on the stack.
 Supports the majority of the `std::string::String` API.
 
-# Explanation / Motivation
+## Explanation / Motivation
 The goal of this library is to provide a type similar to the `std::string::String` type that is included in every Rust program via the prelude.
 
 This library is intended to be used in systems that do not have a global allocator and do not have a standard library, or in libraries that are targeting such systems.
@@ -21,70 +23,10 @@ It is also worth noting that in some places, the function signatures differ slig
 
 Please note that this library lacks the optimizations that the `std` library has, and is not intended to be used in performance critical code.  
 
-# Missing APIs
+## Missing APIs
 - pattern matching (unstable in std)
 - the ability to grow in place (requires a global allocator)
 
-# Supported APIs
+## Supported APIs
 - Everything else
 - the `ToString` trait (implemented for everything which implements `core::fmt::Display`)
-*/
-
-#![no_std]
-
-use core::default::Default;
-
-pub const DEFAULT_BUFFER_SIZE: usize = 4096;
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct String<const N: usize> {
-    pub chars: [u8; N],
-    pub len: usize,
-}
-
-mod methods;
-mod tostring;
-
-pub use tostring::ToString;
-pub use methods::*;
-
-impl<const N: usize> Default for String<N> {
-    fn default() -> Self {
-        String::<N>::from("")
-    }
-}
-
-impl<const N: usize> core::fmt::Display for String<N> {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "{}", self.as_str())
-    }
-}
-
-impl<const N: usize> core::fmt::Debug for String<N> {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "{:#?}", self.as_str())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    extern crate std;
-
-    #[test]
-    fn test_new() {
-        let mut s = String::<64>::new();
-        s.push('a');
-        s.push('b');
-        s.push('ö');
-
-        s.insert(1, 'x');
-        std::println!("s: {:#?}", s.as_str());
-        s.push_str("bc");
-
-        std::println!("s: {:?}", s.contains("xabc"));
-
-        std::println!("34: {:?}", "ö".to_string());
-    }
-}
