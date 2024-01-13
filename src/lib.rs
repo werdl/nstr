@@ -24,6 +24,10 @@ Please note that this library lacks the optimizations that the `std` library has
 # Missing APIs
 - pattern matching (unstable in std)
 - the ability to grow in place (requires a global allocator)
+
+# Supported APIs
+- Everything else
+- the ToString trait
 */
 
 #![no_std]
@@ -39,6 +43,10 @@ pub struct String<const N: usize> {
 }
 
 mod methods;
+mod tostring;
+
+pub use tostring::ToString;
+pub use methods::*;
 
 impl<const N: usize> Default for String<N> {
     fn default() -> Self {
@@ -69,13 +77,14 @@ mod tests {
         let mut s = String::<64>::new();
         s.push('a');
         s.push('b');
-        s.push('c');
+        s.push('ö');
 
         s.insert(1, 'x');
         std::println!("s: {:#?}", s.as_str());
         s.push_str("bc");
-        // assert_eq!(s.as_str(), "abc");
 
         std::println!("s: {:?}", s.contains("xabc"));
+
+        std::println!("34: {:?}", "ö".to_string());
     }
 }
