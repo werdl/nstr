@@ -2,7 +2,14 @@
 name = "nstr"
 version = "0.1.0"
 edition = "2021"
-
+categories = ["data-structures", "embedded", "no-std::no-alloc", "no-std", "memory-management"]
+license = "MIT"
+description = "A no_std, no_alloc, embedded-friendly string library"
+repository = "https://github.com/werdl/nstr"
+readme = "README.md"
+documentation = "https://docs.rs/nstr"
+keywords = ["string", "embedded", "no-std", "no-alloc", "memory-management", "data-structures"]
+homepage = "https://github.com/werdl/nstr"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
