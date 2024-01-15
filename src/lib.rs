@@ -44,9 +44,11 @@ pub struct String<const N: usize> {
 
 mod methods;
 mod tostring;
+mod vec;
 
 pub use tostring::ToString;
 pub use methods::*;
+pub use vec::Vec;
 
 /// Default implementation of `String`
 impl<const N: usize> Default for String<N> {
@@ -87,5 +89,6 @@ mod tests {
         s.push_str("bchahahahaha");
 
         std::println!("s: {:#?}", s.split("ah"));
+        std::println!("42: {:#?}", 42.to_string());
     }
 }
