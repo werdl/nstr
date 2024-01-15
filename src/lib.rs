@@ -84,8 +84,8 @@ mod tests {
 
         s.insert(1, 'x');
         std::println!("s: {:#?}", s.as_str());
-        s.push_str("bc    ");
+        s.push_str("bchahahahaha");
 
-        std::println!("s: {:#?}", s.trim());
+        std::println!("s: {:#?}", s.split("ah"));
     }
 }
