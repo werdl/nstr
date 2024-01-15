@@ -48,18 +48,21 @@ mod tostring;
 pub use tostring::ToString;
 pub use methods::*;
 
+/// Default implementation of `String`
 impl<const N: usize> Default for String<N> {
     fn default() -> Self {
         String::<N>::from("")
     }
 }
 
+/// Implementation of `core::fmt::Display` for `String`
 impl<const N: usize> core::fmt::Display for String<N> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{}", self.as_str())
     }
 }
 
+/// Implementation of `core::fmt::Debug` for `String`
 impl<const N: usize> core::fmt::Debug for String<N> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{:#?}", self.as_str())
@@ -81,10 +84,8 @@ mod tests {
 
         s.insert(1, 'x');
         std::println!("s: {:#?}", s.as_str());
-        s.push_str("bc");
+        s.push_str("bc    ");
 
-        std::println!("s: {:?}", s.contains("xabc"));
-
-        std::println!("34: {:?}", "ö".to_string());
+        std::println!("s: {:#?}", s.trim());
     }
 }

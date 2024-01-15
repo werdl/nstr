@@ -324,80 +324,6 @@ impl<const N: usize> String<N> {
         None
     }
 
-    /// [`std::string::String::rmatch_indices()`](https://doc.rust-lang.org/std/string/struct.String.html#method.rmatch_indices)
-    pub fn rmatch_indices<'a>(&'a self, substring: &'a str) -> core::str::RMatchIndices<'a, &'a str> {
-        self.as_str().rmatch_indices(substring)
-    }
-
-    /// [`std::string::String::rmatches()`](https://doc.rust-lang.org/std/string/struct.String.html#method.rmatches)
-    pub fn rmatches<'a>(&'a self, substring: &'a str) -> core::str::RMatches<'a, &'a str> {
-        self.as_str().rmatches(substring)
-    }
-
-    /// [`std::string::String::rsplit()`](https://doc.rust-lang.org/std/string/struct.String.html#method.rsplit)
-    pub fn rsplit(&self, delimiter: char) -> core::str::RSplit<char> {
-        self.as_str().rsplit(delimiter)
-    }
-
-    /// [`std::string::String::rsplit_once()`](https://doc.rust-lang.org/std/string/struct.String.html#method.rsplit_once)
-    pub fn rsplit_once(&self, separator: char) -> Option<(&str, &str)> {
-        self.as_str().rsplit_once(separator)
-    }
-
-    /// [`std::string::String::rsplit_terminator()`](https://doc.rust-lang.org/std/string/struct.String.html#method.rsplit_terminator)
-    pub fn rsplit_terminator(&self, sep: char) -> core::str::RSplitTerminator<char> {
-        self.as_str().rsplit_terminator(sep)
-    }
-
-    /// [`std::string::String::rsplitn()`](https://doc.rust-lang.org/std/string/struct.String.html#method.rsplitn)
-    pub fn rsplitn(&self, n: usize, separator: char) -> core::str::RSplitN<char> {
-        self.as_str().rsplitn(n, separator)
-    }
-
-    /// [`std::string::String::split()`](https://doc.rust-lang.org/std/string/struct.String.html#method.split)
-    pub fn split(&self, delimiter: char) -> core::str::Split<char> {
-        self.as_str().split(delimiter)
-    }
-
-    /// [`std::string::String::split_ascii_whitespace()`](https://doc.rust-lang.org/std/string/struct.String.html#method.split_ascii_whitespace)
-    pub fn split_ascii_whitespace(&self) -> core::str::SplitAsciiWhitespace {
-        self.as_str().split_ascii_whitespace()
-    }
-
-    /// [`std::string::String::split_at()`](https://doc.rust-lang.org/std/string/struct.String.html#method.split_at)
-    pub fn split_at(&self, mid: usize) -> (&str, &str) {
-        self.as_str().split_at(mid)
-    }
-
-    /// [`std::string::String::split_at_mut()`](https://doc.rust-lang.org/std/string/struct.String.html#method.split_at_mut)
-    pub fn split_at_mut(&mut self, mid: usize) -> (&mut str, &mut str) {
-        self.as_mut_str().split_at_mut(mid)
-    }
-
-    /// [`std::string::String::split_inclusive()`](https://doc.rust-lang.org/std/string/struct.String.html#method.split_inclusive)
-    pub fn split_inclusive(&self, separator: char) -> core::str::SplitInclusive<char> {
-        self.as_str().split_inclusive(separator)
-    }
-
-    /// [`std::string::String::split_once()`](https://doc.rust-lang.org/std/string/struct.String.html#method.split_once)
-    pub fn split_once(&self, separator: char) -> Option<(&str, &str)> {
-        self.as_str().split_once(separator)
-    }
-
-    /// [`std::string::String::split_terminator()`](https://doc.rust-lang.org/std/string/struct.String.html#method.split_terminator)
-    pub fn split_terminator(&self, sep: char) -> core::str::SplitTerminator<char> {
-        self.as_str().split_terminator(sep)
-    }
-
-    /// [`std::string::String::split_whitespace()`](https://doc.rust-lang.org/std/string/struct.String.html#method.split_whitespace)
-    pub fn split_whitespace(&self) -> core::str::SplitWhitespace {
-        self.as_str().split_whitespace()
-    }
-
-    /// [`std::string::String::splitn()`](https://doc.rust-lang.org/std/string/struct.String.html#method.splitn)
-    pub fn splitn(&self, n: usize, separator: char) -> core::str::SplitN<char> {
-        self.as_str().splitn(n, separator)
-    }
 
     /// [`std::string::String::starts_with()`](https://doc.rust-lang.org/std/string/struct.String.html#method.starts_with)
     pub fn starts_with(&self, s: &str) -> bool {
@@ -413,16 +339,6 @@ impl<const N: usize> String<N> {
             j+=1;
         }
         true
-    }
-
-    /// [`std::string::String::strip_prefix()`](https://doc.rust-lang.org/std/string/struct.String.html#method.strip_prefix)
-    pub fn strip_prefix(&self, prefix: &str) -> Option<&str> {
-        self.as_str().strip_prefix(prefix)
-    }
-
-    /// [`std::string::String::strip_suffix()`](https://doc.rust-lang.org/std/string/struct.String.html#method.strip_suffix)
-    pub fn strip_suffix(&self, suffix: &str) -> Option<&str> {
-        self.as_str().strip_suffix(suffix)
     }
 
     /// [`std::string::String::to_ascii_lowercase()`](https://doc.rust-lang.org/std/string/struct.String.html#method.to_ascii_lowercase)
@@ -464,25 +380,6 @@ impl<const N: usize> String<N> {
         }
         s
     }
-
-    /// [`std::string::String::trim()`](https://doc.rust-lang.org/std/string/struct.String.html#method.trim)
-    pub fn trim(&self) -> &str {
-        // remove the whitespaces at the beginning and the end of the string
-        self.as_str().trim()
-    }
-
-    /// [`std::string::String::trim_end()`](https://doc.rust-lang.org/std/string/struct.String.html#method.trim_end)
-    pub fn trim_end(&self) -> &str {
-        // remove the whitespaces at the end of the string
-        self.as_str().trim_end()
-    }
-
-    /// [`std::string::String::trim_start()`](https://doc.rust-lang.org/std/string/struct.String.html#method.trim_start)
-    pub fn trim_start(&self) -> &str {
-        // remove the whitespaces at the beginning of the string
-        self.as_str().trim_start()
-    }
-
     /// [`std::string::String::truncate()`](https://doc.rust-lang.org/std/string/struct.String.html#method.truncate)
     pub fn truncate(&mut self, new_len: usize) {
         // truncate the string to new_len
