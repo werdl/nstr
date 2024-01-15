@@ -1,5 +1,13 @@
 use crate::String;
 
+impl<const N: usize> core::ops::Deref for String<N> {
+    type Target = str;
+
+    fn deref(&self) -> &Self::Target {
+        self.as_str()
+    }
+}
+
 impl<const N: usize> String<N> {
 
     /// Creates a new string, with maximum byte length `N`.
@@ -9,40 +17,11 @@ impl<const N: usize> String<N> {
         String { chars: [0; N], len: 0 }
     }
 
-    /// [`std::string::String::as_ascii()`](https://doc.rust-lang.org/std/string/struct.String.html#method.as_ascii)
-    pub fn as_ascii(&self) -> Option<&str> {
-        let out = core::str::from_utf8(&self.chars[..self.len]).ok();
-        if out.map(|s| s.is_ascii()).is_some() {
-            out
-        } else {
-            None
-        }
-    }
-    
-    /// [`std::string::String::as_bytes()`](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes)
-    pub fn as_bytes(&self) -> &[u8] {
-        &self.chars[..self.len]
-    }
-
-    /// [`std::string::String::as_bytes_mut()`](https://doc.rust-lang.org/std/string/struct.String.html#method.as_bytes_mut)
-    pub fn as_bytes_mut(&mut self) -> &mut [u8] {
-        &mut self.chars[..self.len]
-    }
 
     /// [`std::string::String::as_mut_str()`](https://doc.rust-lang.org/std/string/struct.String.html#method.as_mut_str)
     pub fn as_mut_str(&mut self) -> &mut str {
         // Convert the byte slice to a string slice
         core::str::from_utf8_mut(&mut self.chars[..self.len]).unwrap()
-    }
-
-    /// [`std::string::String::as_mut_ptr()`](https://doc.rust-lang.org/std/string/struct.String.html#method.as_mut_ptr)
-    pub fn as_mut_ptr(&mut self) -> *mut u8 {
-        self.chars.as_mut_ptr()
-    }
-
-    /// [`std::string::String::as_ptr()`](https://doc.rust-lang.org/std/string/struct.String.html#method.as_ptr)
-    pub fn as_ptr(&self) -> *const u8 {
-        self.chars.as_ptr()
     }
 
     /// [`std::string::String::as_str()`](https://doc.rust-lang.org/std/string/struct.String.html#method.as_str)
@@ -51,20 +30,12 @@ impl<const N: usize> String<N> {
         core::str::from_utf8(&self.chars[..self.len]).unwrap()
     }
 
-    /// [`std::string::String::bytes()`](https://doc.rust-lang.org/std/string/struct.String.html#method.bytes)
-    pub fn bytes(&self) -> core::str::Bytes {
-        self.as_str().bytes()
-    }
 
     /// [`std::string::String::capacity()`](https://doc.rust-lang.org/std/string/struct.String.html#method.capacity)
     pub fn capacity(&self) -> usize {
         N
     }
     
-    /// [`std::string::String::char_indices()`](https://doc.rust-lang.org/std/string/struct.String.html#method.char_indices)
-    pub fn char_indices(&self) -> core::str::CharIndices {
-        self.as_str().char_indices()
-    }
 
     /// [`std::string::String::chars()`](https://doc.rust-lang.org/std/string/struct.String.html#method.chars)
     pub fn chars(&self) -> core::str::Chars {
@@ -76,25 +47,6 @@ impl<const N: usize> String<N> {
         self.len = 0;
     }
 
-    /// [`std::string::String::contains()`](https://doc.rust-lang.org/std/string/struct.String.html#method.contains)
-    pub fn contains(&self, s: &str) -> bool {
-        // iterate over the chars of self
-        // check if the chars of self are equal to s
-        let mut i = 0;
-        let mut j = 0;
-        while i < self.len {
-            if self.chars[i] == s.as_bytes()[j] {
-                j+=1;
-                if j == s.len() {
-                    return true;
-                }
-            } else {
-                j = 0;
-            }
-            i+=1;
-        }
-        false
-    }
 
     /// [`std::string::String::drain()`](https://doc.rust-lang.org/std/string/struct.String.html#method.drain)
     /// Note that this implementation is not the same as the one in the standard library. It does the same, but rather returns the removed chars as a new string. This is because the Drain iterator is not in the `core` library.
@@ -116,55 +68,6 @@ impl<const N: usize> String<N> {
         s
     }
 
-    /// [`std::string::String::encode_utf16()`](https://doc.rust-lang.org/std/string/struct.String.html#method.encode_utf16)
-    pub fn encode_utf16(&self) -> core::str::EncodeUtf16 {
-        self.as_str().encode_utf16()
-    }
-
-    /// [`std::string::String::ends_with()`](https://doc.rust-lang.org/std/string/struct.String.html#method.ends_with)
-    pub fn ends_with(&self, s: &str) -> bool {
-        // iterate over the chars of s
-        // check if the last chars of self are equal to s
-        let mut i = 0;
-        let mut j = self.len - s.len();
-        while i < s.len() {
-            if self.chars[j] != s.as_bytes()[i] {
-                return false;
-            }
-            i+=1;
-            j+=1;
-        }
-        true
-    }
-
-    /// [`std::string::String::eq_ignore_ascii_case()`](https://doc.rust-lang.org/std/string/struct.String.html#method.eq_ignore_ascii_case)
-    pub fn eq_ignore_ascii_case(&self, other: &str) -> bool {
-        // iterate over the chars of self and other
-        // check if the chars of self and other are equal
-        let mut i = 0;
-        while i < self.len {
-            if self.chars[i].to_ascii_lowercase() != other.as_bytes()[i].to_ascii_lowercase() {
-                return false;
-            }
-            i+=1;
-        }
-        true
-    }
-    
-    /// [`std::string::String::escape_debug()`](https://doc.rust-lang.org/std/string/struct.String.html#method.escape_debug)
-    pub fn escape_debug(&self) -> core::str::EscapeDebug<'_> {
-        self.as_str().escape_debug()
-    }
-
-    /// [`std::string::String::escape_default()`](https://doc.rust-lang.org/std/string/struct.String.html#method.escape_default)
-    pub fn escape_default(&self) -> core::str::EscapeDefault<'_> {
-        self.as_str().escape_default()
-    }
-
-    /// [`std::string::String::escape_unicode()`](https://doc.rust-lang.org/std/string/struct.String.html#method.escape_unicode)
-    pub fn escape_unicode(&self) -> core::str::EscapeUnicode<'_> {
-        self.as_str().escape_unicode()
-    }
 
     /// [`std::string::String::extend_from_within()`](https://doc.rust-lang.org/std/string/struct.String.html#method.extend_from_within)
     pub fn extend_from_within(&mut self, range: core::ops::Range<usize>) {
@@ -176,25 +79,6 @@ impl<const N: usize> String<N> {
         }
     }
 
-    /// [`std::string::String::find()`](https://doc.rust-lang.org/std/string/struct.String.html#method.find)
-    pub fn find(&self, s: &str) -> Option<usize> {
-        // iterate over the chars of self
-        // check if the chars of self are equal to s
-        let mut i = 0;
-        let mut j = 0;
-        while i < self.len {
-            if self.chars[i] == s.as_bytes()[j] {
-                j+=1;
-                if j == s.len() {
-                    return Some(i-j+1);
-                }
-            } else {
-                j = 0;
-            }
-            i+=1;
-        }
-        None
-    }
     
     /// [`std::string::String::from()`](https://doc.rust-lang.org/std/string/struct.String.html#method.from)
     pub fn from(s: &str) -> Self {
@@ -262,26 +146,9 @@ impl<const N: usize> String<N> {
         }        
     }
 
-    /// [`std::string::String::is_ascii()`](https://doc.rust-lang.org/std/string/struct.String.html#method.is_ascii)
-    pub fn is_ascii(&self) -> bool {
-        self.as_str().is_ascii()
-    }
-
-    /// [`std::string::String::is_char_boundary()`](https://doc.rust-lang.org/std/string/struct.String.html#method.is_char_boundary)
-    pub fn is_char_boundary(&self, index: usize) -> bool {
-        self.as_str().is_char_boundary(index)
-    }
-
     /// [`std::string::String::lines()`](https://doc.rust-lang.org/std/string/struct.String.html#method.lines)
     pub fn lines(&self) -> core::str::Lines {
         self.as_str().lines()
-    }
-
-    #[allow(deprecated)]
-    #[deprecated(since = "1.4.0", note = "use lines() instead")]
-    /// [`std::string::String::lines_any()`](https://doc.rust-lang.org/std/string/struct.String.html#method.lines_any)
-    pub fn lines_any(&self) -> core::str::LinesAny {
-        self.as_str().lines_any()
     }
 
     /// [`std::string::String::make_ascii_lowercase()`](https://doc.rust-lang.org/std/string/struct.String.html#method.make_ascii_lowercase)
@@ -300,24 +167,6 @@ impl<const N: usize> String<N> {
         }
     }
 
-    /// [`std::string::String::match_indices()`](https://doc.rust-lang.org/std/string/struct.String.html#method.match_indices)
-    pub fn match_indices<'a>(&'a self, substring: &'a str) -> core::str::MatchIndices<'a, &'a str> {
-        self.as_str().match_indices(substring)
-    }
-
-    /// [`std::string::String::matches()`](https://doc.rust-lang.org/std/string/struct.String.html#method.matches)
-    pub fn matches<'a>(&'a self, substring: &'a str) -> core::str::Matches<'a, &'a str> {
-        self.as_str().matches(substring)
-    }
-
-    /// [`std::string::String::parse()`](https://doc.rust-lang.org/std/string/struct.String.html#method.parse)
-    pub fn parse<T>(&self) -> T
-    where
-        T: core::str::FromStr + core::fmt::Debug,
-        <T as core::str::FromStr>::Err: core::fmt::Debug,
-    {
-        self.as_str().parse::<T>().unwrap()
-    }
 
     /// [`std::string::String::pop()`](https://doc.rust-lang.org/std/string/struct.String.html#method.pop)
     pub fn pop(&mut self) -> Option<char> {
