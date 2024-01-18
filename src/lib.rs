@@ -28,6 +28,8 @@ Please note that this library lacks the optimizations that the `std` library has
 # Supported APIs
 - Everything else
 - the `ToString` trait (implemented for everything which implements `core::fmt::Display`)
+
+Also provides Vec<T, N> with similar restrictions.
 */
 
 #![no_std]

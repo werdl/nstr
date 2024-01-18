@@ -1,6 +1,6 @@
 [package]
 name = "nstr"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 categories = ["data-structures", "embedded", "no-std::no-alloc", "no-std", "memory-management"]
 license = "MIT"
