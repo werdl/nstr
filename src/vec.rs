@@ -1,8 +1,21 @@
-use core::ops::RangeBounds;
+use core::ops::{RangeBounds, Index};
 
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Vec<T, const N: usize> {
     pub items: [T; N],
     pub len: usize,
+}
+
+impl core::fmt::Debug for Vec<u8, 64> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "[{:#?}]", self.as_slice())
+    }
+}
+
+impl core::fmt::Display for Vec<u8, 64> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{}", core::str::from_utf8(self.as_slice()).unwrap())
+    }
 }
 
 impl<T, const N: usize> Vec<T, N> 
@@ -380,5 +393,23 @@ impl<T, const N: usize> IntoIterator for Vec<T, N> {
     /// [`std::vec::Vec::into_iter`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.into_iter)
     fn into_iter(self) -> Self::IntoIter {
         self.items.into_iter()
+    }
+}
+
+impl<T, const N: usize> Index<usize> for Vec<T, N> {
+    type Output = T;
+
+    /// [`std::vec::Vec::index`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.index)
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.items[index]
+    }
+}
+
+impl<T, const N: usize> Index<core::ops::Range<usize>> for Vec<T, N> {
+    type Output = [T];
+
+    /// [`std::vec::Vec::index`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.index)
+    fn index(&self, index: core::ops::Range<usize>) -> &Self::Output {
+        &self.items[index]
     }
 }

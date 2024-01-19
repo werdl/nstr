@@ -5,7 +5,7 @@ A string library for systems with no global allocator and no standard library. T
 Supports the majority of the `std::string::String` API.
 
 ## Explanation / Motivation
-The goal of this library is to provide a type similar to the `std::string::String` type that is included in every Rust program via the prelude.
+The goal of this library is to provide a type similar to the `std::string::String` type that is included in every Rust program via the prelude. It also aims to provide a `std::vec::Vec` style type, but this feature is not as supported, as there are more methods that require the prescense of a heap.
 
 This library is intended to be used in systems that do not have a global allocator and do not have a standard library, or in libraries that are targeting such systems.
 
