@@ -2,7 +2,8 @@ use crate::{String, DEFAULT_BUFFER_SIZE};
 use core::fmt::{Write, Error};
 
 pub trait ToString {
-    fn to_string(&self) -> String<DEFAULT_BUFFER_SIZE>;
+    /// convert a type to a String
+    fn to_string<const N: usize>(&self) -> String<N>;
 }
 
 impl<const N: usize> Write for String<N> {
@@ -24,8 +25,8 @@ impl<T> ToString for T
 where
     T: core::fmt::Display,
 {
-    fn to_string(&self) -> String<DEFAULT_BUFFER_SIZE> {
-        let mut s = String::<4096>::new();
+    fn to_string<const N: usize>(&self) -> String<N> {
+        let mut s = String::<N>::new();
         write!(s, "{}", self).unwrap();
         s
     }

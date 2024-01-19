@@ -52,6 +52,40 @@ pub use tostring::ToString;
 pub use methods::*;
 pub use vec::Vec;
 
+/// Macro for creating a `Vec`, similar to the `vec!` macro in the `std` library
+macro_rules! vec {
+    ($($x:expr),*) => {
+        {
+            let mut temp_vec = Vec::<u8, DEFAULT_BUFFER_SIZE>::new();
+            $(
+                temp_vec.push($x);
+            )*
+            temp_vec
+        }
+    };
+}
+
+/// Macro for creating a `String`, similar to the `string!` macro in the `std` library
+macro_rules! string {
+    ($x:expr) => {
+        {
+            let mut temp_string = String::<DEFAULT_BUFFER_SIZE>::new();
+            temp_string.push_str(stringify!($x));
+            temp_string
+        }
+    };
+
+    ($($x:expr),*) => {
+        {
+            let mut temp_string = String::<DEFAULT_BUFFER_SIZE>::new();
+            $(
+                temp_string.push($x);
+            )*
+            temp_string
+        }
+    };
+}
+
 /// Default implementation of `String`
 impl<const N: usize> Default for String<N> {
     fn default() -> Self {
@@ -91,6 +125,26 @@ mod tests {
         s.push_str("bchahahahaha");
 
         std::println!("s: {:#?}", s.split("ah"));
-        std::println!("42: {:#?}", 42.to_string());
+        std::println!("42: {:#?}", 42.to_string::<17>());
+    }
+
+    #[test]
+    fn test_vec() {
+        let mut v = vec![1, 2, 3, 4, 5];
+        std::println!("v: {}", v);
+        v.insert(2, 42);
+        std::println!("v: {}", v);
+        v.remove(2);
+        std::println!("v: {}", v);
+    }
+
+    #[test]
+    fn test_string() {
+        let mut s = string!["abcdef"];
+        std::println!("s: {}", s);
+        s.insert(2, 'x');
+        std::println!("s: {}", s);
+        s.remove(2);
+        std::println!("s: {}", s);
     }
 }

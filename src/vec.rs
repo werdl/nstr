@@ -6,15 +6,28 @@ pub struct Vec<T, const N: usize> {
     pub len: usize,
 }
 
-impl core::fmt::Debug for Vec<u8, 64> {
+impl <T, const N: usize> core::fmt::Display for Vec<T, N> 
+where T: core::fmt::Display + Default + Copy + PartialEq {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "[{:#?}]", self.as_slice())
+        let mut i = 0;
+        write!(f, "[")?;
+        while i < self.len {
+            write!(f, "{}", self.items[i])?;
+            i += 1;
+
+            if i < self.len {
+                write!(f, ", ")?;
+            }
+        }
+        write!(f, "]");
+        Ok(())
     }
 }
 
-impl core::fmt::Display for Vec<u8, 64> {
+impl <T, const N: usize> core::fmt::Debug for Vec<T, N> 
+where T: core::fmt::Display + Default + Copy + PartialEq {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "{}", core::str::from_utf8(self.as_slice()).unwrap())
+        write!(f, "{} - {}", self, self.capacity())
     }
 }
 
